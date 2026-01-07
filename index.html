@@ -2,22 +2,68 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>我的个人网站</title>
-    <style>
-        body {
-            max-width: 800px;
-            margin: 50px auto;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人主页</title>
+    <!-- 引入外部样式文件 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- 可选：引入图标库，美化页面 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <h1>欢迎来到我的个人网站！</h1>
-    <p>这是通过 GitHub Pages 搭建的第一个页面 🎉</p>
-    <p>我的 GitHub 地址：https://github.com/XYTengC</p>
+    <!-- 页面头部 -->
+    <header class="header">
+        <div class="avatar">
+            <!-- 替换成你的头像链接（可先用免费图床，比如 https://imgchr.com/ 上传后复制链接） -->
+            <img src="https://via.placeholder.com/150" alt="我的头像">
+        </div>
+        <h1 class="name">你的名字</h1>
+        <p class="desc">你的简介，比如「前端爱好者 | 编程新手 | 记录学习点滴」</p>
+        <!-- 联系方式 -->
+        <div class="contact">
+            <a href="https://github.com/你的用户名" target="_blank" title="GitHub">
+                <i class="fa fa-github"></i>
+            </a>
+            <a href="mailto:你的邮箱@xxx.com" target="_blank" title="邮箱">
+                <i class="fa fa-envelope"></i>
+            </a>
+            <a href="https://blog.csdn.net/你的账号" target="_blank" title="CSDN">
+                <i class="fa fa-code"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="main">
+        <section class="section about">
+            <h2><i class="fa fa-user"></i> 关于我</h2>
+            <p>这里填写你的个人介绍，比如：</p>
+            <p>大家好，我是一名编程新手，正在学习 HTML/CSS/JS，这个网站是通过 GitHub Pages 搭建的第一个静态网站。</p>
+            <p>平时喜欢学习前端知识，分享自己的学习笔记和小项目。</p>
+        </section>
+
+        <section class="section projects">
+            <h2><i class="fa fa-folder-open"></i> 我的项目</h2>
+            <div class="project-list">
+                <div class="project-item">
+                    <h3>项目1：GitHub 个人网站</h3>
+                    <p>基于 GitHub Pages 搭建的静态个人主页，使用纯 HTML/CSS/JS 开发。</p>
+                    <a href="https://你的用户名.github.io" target="_blank">查看项目 <i class="fa fa-external-link"></i></a>
+                </div>
+                <div class="project-item">
+                    <h3>项目2：待补充</h3>
+                    <p>可以添加你的其他小项目，比如计算器、待办清单等。</p>
+                    <a href="#" target="_blank">查看项目 <i class="fa fa-external-link"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>© 2026 你的名字 | 基于 GitHub Pages 搭建</p>
+    </footer>
+
+    <!-- 引入外部脚本文件 -->
+    <script src="script.js"></script>
 </body>
 </html>
