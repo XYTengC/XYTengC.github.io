@@ -155,3 +155,59 @@ body {
         padding: 20px;
     }
 }
+
+/* 滚动渐入动画基础样式 */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px); /* 初始位置向下偏移20px */
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* 滚动后显示的样式 */
+.fade-in.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 链接悬浮效果 */
+a {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* 链接下划线动画 */
+a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #428bca; /* 下划线颜色，和主题色一致 */
+  transition: width 0.3s ease;
+}
+
+a:hover::after {
+  width: 100%; /* 悬浮时下划线展开 */
+}
+
+/* 按钮悬浮效果 */
+.btn, button, .pagination a {
+  transition: all 0.3s ease;
+}
+
+.btn:hover, button:hover, .pagination a:hover {
+  transform: translateY(-2px); /* 向上偏移2px */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+}
+
+/* 卡片/文章列表悬浮效果 */
+.post-preview, .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-preview:hover, .card:hover {
+  transform: translateY(-5px); /* 向上偏移5px */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 增强阴影 */
+}
+
