@@ -7,7 +7,7 @@
 
 网址：https://xytengc.github.io/  
 
-直接看大佬的讲解
+网页是直接copy大佬的，直接看大佬的讲解
 [🇨🇳  中文文档](https://github.com/Huxpro/huxpro.github.io/blob/master/_doc/README.zh.md)
 
 
