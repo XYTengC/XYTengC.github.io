@@ -7,7 +7,8 @@ description: "这里是花叶不湘伦的个人博客，与你一起发现更大
 keyword: "Xyteng, 博客, 个人网站, FPGA，图像算法"
 url: "https://xytengc.github.io" # your host, for absolute URL
 baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
-
+include:
+  - admin
 # Publish posts or collection documents with a future date.
 future: true
 # SNS settings 社交账号配置（SNS settings）
