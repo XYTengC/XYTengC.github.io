@@ -1,0 +1,24 @@
+backend:
+  name: github
+  repo: xytengc/xytengc.github.io
+  branch: main
+  site_domain: verdant-blini-6e761d.netlify.app
+  
+media_folder: img
+public_folder: /img
+
+collections:
+  - name: posts
+    label: 博客文章
+    folder: _posts
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 发布日期, name: date, widget: datetime }
+      - { label: 更新日期, name: updated, widget: datetime, required: false }
+      - { label: 分类, name: categories, widget: string, required: false }
+      - { label: 标签, name: tags, widget: list, required: false }
+      - { label: 头图, name: header-img, widget: image, required: false }
+      - { label: 摘要, name: excerpt, widget: text, required: false }
+      - { label: 正文, name: body, widget: markdown }
