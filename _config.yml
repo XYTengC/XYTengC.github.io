@@ -1,3 +1,5 @@
+include:
+  - admin
 # Site settings
 title: 花叶不湘伦|第一世界
 SEOTitle: 花叶不湘伦的博客 | Xyteng Blog
@@ -10,7 +12,6 @@ baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
 future: true
-
 # SNS settings 社交账号配置（SNS settings）
 #这些用户名会被 _includes/sns-links.html 组件调用，生成对应平台的跳转链接
 RSS: false

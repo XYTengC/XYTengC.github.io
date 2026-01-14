@@ -10,7 +10,7 @@
     top: auto !important;      /* 取消顶部定位 */
     z-index: 99999 !important;
     /* 确保可以拖动 */
-    cursor: pointer !important;
+    cursor: default !important;
 
     
     /* 看板娘尺寸 */
