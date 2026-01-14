@@ -5,7 +5,7 @@ backend:
   branch: main
   site_domain: xytengc.github.io   # 必填，回调用
   base_url: https://api.netlify.com   # 固定
-  auth_endpoint: auth                 # 固定
+  auth_endpoint: oauth                 # 固定
   client_id: Ov23liXGBUIHeygkv3Vu            # 刚才生成的
   client_secret: 7bd599a28d56ae36bfafd7587d554e8dd8723f00               # 刚才生成的
 media_folder: "img"

@@ -1,0 +1,12 @@
+<!-- oauth/index.html -->
+<script>
+  // 把 GitHub 回传的 ?code=xxx 回写给父窗口
+  if (window.opener) {
+    const code = new URLSearchParams(location.search).get('code');
+    const state = new URLSearchParams(location.search).get('state');
+    if (code) {
+      window.opener.postMessage({ code, state }, location.origin);
+    }
+  }
+  window.close();
+</script>
