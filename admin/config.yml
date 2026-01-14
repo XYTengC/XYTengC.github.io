@@ -2,8 +2,14 @@ backend:
   name: github
   repo: xytengc/xytengc.github.io
   branch: main
-  site_domain: verdant-blini-6e761d.netlify.app
-  
+  auth_type: implicit
+  app_id: Ov23liXGBUIHeygkv3Vu
+  netlify_identity: true
+  # 使用相对路径的认证端点，避免URL重复拼接
+  auth_endpoint: /auth
+  # 禁用自动site_id添加，解决本地开发问题
+  site_id: false
+
 media_folder: img
 public_folder: /img
 
