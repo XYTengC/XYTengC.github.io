@@ -63,6 +63,12 @@ let rightColumns = [];
 // 跟踪每列的冷却状态，存储每列的最后一条弹幕结束时间
 let leftColumnCooldowns = [];
 let rightColumnCooldowns = [];
+// 跟踪页面可见性状态
+let isPageVisible = true;
+// 跟踪上次生成弹幕的时间
+let lastBarrageTime = 0;
+// 存储正在动画的弹幕
+let activeBarrages = [];
 
 function processPoemText(text, align) {
     // 根据标点符号和长度适当换行
@@ -190,6 +196,15 @@ function selectBestColumn(isLeft) {
 
 // 创建单个弹幕
 function createBarrage() {
+    // 检查页面是否可见，如果不可见则不创建弹幕
+    if (!isPageVisible) return;
+    
+    // 检查是否已经超过了弹幕生成间隔
+    const currentTime = Date.now();
+    if (currentTime - lastBarrageTime < barrageConfig.interval) {
+        return;
+    }
+    
     if (!container) return;
     
     const poem = poems[Math.floor(Math.random() * poems.length)];
@@ -205,6 +220,9 @@ function createBarrage() {
     if (columnIndex === -1) {
         return;
     }
+    
+    // 更新上次生成弹幕的时间
+    lastBarrageTime = currentTime;
     
     // 创建弹幕元素
     const barrage = document.createElement('div');
@@ -230,13 +248,14 @@ function createBarrage() {
         marginSide = 'margin-left: 5px;';
     }
     
+    // 设置初始透明度为0，避免闪烁
     barrage.style.cssText = `
         position: absolute;
         max-width: ${barrageConfig.maxWidth}px;
         width: ${barrageConfig.maxWidth}px;
         font-size: ${barrageConfig.fontSize}px;
         color: ${color};
-        opacity: ${barrageConfig.opacity};
+        opacity: 0;
         left: ${left};
         right: ${right};
         bottom: -100px;
@@ -255,7 +274,7 @@ function createBarrage() {
             1px 1px 3px rgba(0, 0, 0, 0.6),
             -1px 1px 3px rgba(0, 0, 0, 0.3);
         z-index: 9999;
-        transition: opacity 0.5s ease;
+        transition: opacity 1s ease-in-out;
     `;
     
     // 设置处理后的文本（带换行）
@@ -281,17 +300,37 @@ function createBarrage() {
         positions.push(pos);
         
         // 存储当前弹幕的状态信息
+        const barrageId = Date.now() + Math.random();
         const barrageState = {
+            id: barrageId,
+            element: barrage,
             startPos: startPos,
             columnIndex: columnIndex,
             isLeft: isLeft,
-            totalTime: totalTime
+            totalTime: totalTime,
+            speed: speed,
+            pos: pos,
+            active: true
         };
+        
+        // 添加到活跃弹幕列表
+        activeBarrages.push(barrageState);
+        
+        // 延迟一点时间后设置透明度，避免闪烁
+        setTimeout(() => {
+            barrage.style.opacity = barrageConfig.opacity;
+        }, 100);
         
         // 动画函数
         function move() {
+            // 检查页面是否可见，如果不可见则暂停动画
+            if (!isPageVisible) {
+                return;
+            }
+            
             pos += speed;
-            barrage.style.bottom  = `${pos}px`;
+            barrage.style.bottom = `${pos}px`;
+            barrageState.pos = pos;
             
             // 更新弹幕在跟踪数组中的位置
             const positions = barrageState.isLeft ? leftColumns[barrageState.columnIndex] : rightColumns[barrageState.columnIndex];
@@ -325,6 +364,14 @@ function createBarrage() {
                 const cooldowns = barrageState.isLeft ? leftColumnCooldowns : rightColumnCooldowns;
                 // 冷却时间 = 当前时间 + 弹幕从开始到结束的时间 + 额外的冷却时间
                 cooldowns[barrageState.columnIndex] = currentTime + barrageState.totalTime * 1000 + barrageConfig.columnCooldown;
+                
+                // 从活跃弹幕列表中移除
+                const activeIndex = activeBarrages.findIndex(b => b.id === barrageId);
+                if (activeIndex !== -1) {
+                    activeBarrages.splice(activeIndex, 1);
+                }
+                
+                barrageState.active = false;
             } else {
                 requestAnimationFrame(move);
             }
@@ -365,6 +412,93 @@ function initBarrageSystem() {
     
     // 响应窗口大小变化
     window.addEventListener('resize', handleResize);
+    
+    // 监听页面可见性变化
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+}
+
+// 处理页面可见性变化
+function handleVisibilityChange() {
+    if (document.hidden) {
+        // 页面隐藏时
+        isPageVisible = false;
+        // 清除弹幕生成间隔
+        if (barrageInterval) {
+            clearInterval(barrageInterval);
+            barrageInterval = null;
+        }
+        // 暂停所有活跃弹幕的动画
+        activeBarrages.forEach(barrage => {
+            barrage.active = false;
+        });
+    } else {
+        // 页面可见时
+        isPageVisible = true;
+        // 重新设置弹幕生成间隔
+        if (!barrageInterval) {
+            barrageInterval = setInterval(createBarrage, barrageConfig.interval);
+        }
+        // 重新启动所有活跃弹幕的动画
+        activeBarrages.forEach(barrage => {
+            if (barrage.active === false && barrage.element) {
+                barrage.active = true;
+                // 重新启动动画
+                function resumeMove() {
+                    if (!isPageVisible) return;
+                    
+                    barrage.pos += barrage.speed;
+                    barrage.element.style.bottom = `${barrage.pos}px`;
+                    
+                    // 更新弹幕在跟踪数组中的位置
+                    const positions = barrage.isLeft ? leftColumns[barrage.columnIndex] : rightColumns[barrage.columnIndex];
+                    const index = positions.indexOf(barrage.startPos);
+                    if (index !== -1) {
+                        positions[index] = barrage.pos;
+                    }
+                    
+                    // 如果弹幕完全进入视野，稍微降低透明度避免干扰
+                    if (barrage.pos > 50 && barrage.pos < window.innerHeight + 100) {
+                        barrage.element.style.opacity = Math.max(0.4, barrageConfig.opacity - 0.1);
+                    } else {
+                        barrage.element.style.opacity = barrageConfig.opacity;
+                    }
+                    
+                    // 如果超出屏幕底部，移除弹幕
+                    if (barrage.pos > window.innerHeight + 20) {
+                        if (barrage.element.parentNode === container) {
+                            container.removeChild(barrage.element);
+                        }
+                        // 从对应列的跟踪数组中移除
+                        const columns = barrage.isLeft ? leftColumns : rightColumns;
+                        const positions = columns[barrage.columnIndex];
+                        const removeIndex = positions.indexOf(barrage.pos);
+                        if (removeIndex !== -1) {
+                            positions.splice(removeIndex, 1);
+                        }
+                        
+                        // 设置该列的冷却时间
+                        const currentTime = Date.now();
+                        const cooldowns = barrage.isLeft ? leftColumnCooldowns : rightColumnCooldowns;
+                        cooldowns[barrage.columnIndex] = currentTime + barrage.totalTime * 1000 + barrageConfig.columnCooldown;
+                        
+                        // 从活跃弹幕列表中移除
+                        const activeIndex = activeBarrages.findIndex(b => b.id === barrage.id);
+                        if (activeIndex !== -1) {
+                            activeBarrages.splice(activeIndex, 1);
+                        }
+                        
+                        barrage.active = false;
+                    } else {
+                        requestAnimationFrame(resumeMove);
+                    }
+                }
+                requestAnimationFrame(resumeMove);
+            }
+        });
+        
+        // 重置上次生成弹幕的时间，避免页面恢复时生成过多弹幕
+        lastBarrageTime = Date.now();
+    }
 }
 
 // 处理窗口大小变化

@@ -17,12 +17,13 @@
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div id="huxblog_navbar">
+            <div id="xytblog_navbar">
                 <div class="navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a href="{{ site.baseurl }}/">Home</a>
                         </li>
+                        <!-- 动态生成的链接 -->
                         {% for page in site.pages %}
                         {% if page.title and page.hide-in-nav != true %}
                         <li>
@@ -30,11 +31,6 @@
                         </li>
                         {% endif %}
                         {% endfor %}
-                        <li>
-                            <a href="{{ site.baseurl }}/admin/" class="admin-link">
-                                <span class="en">Admin</span>
-                            </a>
-                        </li>
                         <li class="search-icon">
                             <a href="javascript:void(0)">
                                 <i class="fa fa-search"></i>
@@ -54,7 +50,7 @@
         // in high-perf jank-free CSS3 implementation
         var $body = document.body;
         var $toggle = document.querySelector('.navbar-toggle');
-        var $navbar = document.querySelector('#huxblog_navbar');
+        var $navbar = document.querySelector('#xytblog_navbar');
         var $collapse = document.querySelector('.navbar-collapse');
 
         var __HuxNav__ = {
